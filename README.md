@@ -79,7 +79,7 @@ The screenshot uses the sample sales dataset and omits browser chrome.
 
 ## Current status
 
-The core application, Docker Compose setup, and Render deployment are in the repository. The [Streamlit dashboard](https://insightai-dashboard.onrender.com/) and [FastAPI docs](https://insightai-kzvg.onrender.com/docs) are accessible. The API passed health, temporary CSV upload, KPI, analytics, forecast, segmentation, and anomaly checks after the psycopg update; the temporary dataset was deleted. LLM-backed flows have not been tested on the hosted services. See [DEPLOYMENT.md](DEPLOYMENT.md) for verification details and access limitations.
+The core application, Docker Compose setup, and Render deployment are in the repository. The [Streamlit dashboard](https://insightai-dashboard.onrender.com/) and [FastAPI docs](https://insightai-kzvg.onrender.com/docs) are accessible. The API passed health, temporary CSV upload, KPI, analytics, forecast, segmentation, and anomaly checks after the psycopg update; the temporary dataset was deleted. A sample sales question returned the calculated total revenue, and a synthetic PDF question returned its expected fact with a page citation. Both temporary records were deleted. See [DEPLOYMENT.md](DEPLOYMENT.md) for verification details and access limitations.
 
 ## Requirements
 
@@ -220,10 +220,10 @@ For a private server deployment, follow [DEPLOYMENT.md](DEPLOYMENT.md). The serv
 - The business-question router supports a fixed set of analyses. Unsupported questions receive guidance instead of a general answer.
 - Forecasting uses a linear trend and does not model seasonality. Anomaly detection is a screening rule, not a data-quality verdict.
 - PDF retrieval is lexical and does not OCR scanned pages. Retrieved document text and the question are sent to Groq when generating an answer.
-- Hosted LLM-backed flows remain to be checked.
+- Hosted AI smoke checks covered one grounded sales answer and one cited PDF answer; other questions and broader interactive flows remain untested.
 
 Potential follow-up work includes user access controls, retention and backup automation, semantic document retrieval, richer forecasting, and repeatable deployment checks.
 
 ## Development status
 
-The repository is intentionally being built one phase at a time. Current limitations: the router supports a fixed set of intents; the hosted dashboard responds and a sample-data screenshot is included, but all interactive dashboard and LLM/RAG flows have not been independently exercised. The project does not save AI conversations or persist computed analysis outputs.
+The repository is intentionally being built one phase at a time. Current limitations: the router supports a fixed set of intents; the hosted dashboard responds and a sample-data screenshot is included, but all interactive widget flows have not been independently exercised. The project does not save AI conversations or persist computed analysis outputs.
