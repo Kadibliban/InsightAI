@@ -71,11 +71,15 @@ The SQLAlchemy schema has two sales tables: `datasets` stores upload metadata, a
 
 ## Screenshots
 
-No dashboard screenshot is included yet. The Render URL currently verified is the FastAPI service, not the Streamlit dashboard. Add a dashboard capture when its deployed URL is available.
+The deployed dashboard is available at [insightai-dashboard.onrender.com](https://insightai-dashboard.onrender.com/).
+
+![InsightAI sales dashboard showing sample-data KPIs and charts](screenshots/dashboard.png)
+
+The screenshot uses the sample sales dataset and omits browser chrome.
 
 ## Current status
 
-The core application, Docker Compose setup, and Render dependency declaration are in the repository. The [live FastAPI service](https://insightai-kzvg.onrender.com/docs) passed a health check and temporary CSV upload, KPI, analytics, forecast, segmentation, and anomaly checks after the psycopg update. The temporary dataset was deleted. The separate Streamlit dashboard and LLM-backed flows have not been verified. See [DEPLOYMENT.md](DEPLOYMENT.md) for verification details and access limitations.
+The core application, Docker Compose setup, and Render deployment are in the repository. The [Streamlit dashboard](https://insightai-dashboard.onrender.com/) and [FastAPI docs](https://insightai-kzvg.onrender.com/docs) are accessible. The API passed health, temporary CSV upload, KPI, analytics, forecast, segmentation, and anomaly checks after the psycopg update; the temporary dataset was deleted. LLM-backed flows have not been tested on the hosted services. See [DEPLOYMENT.md](DEPLOYMENT.md) for verification details and access limitations.
 
 ## Requirements
 
@@ -212,14 +216,14 @@ For a private server deployment, follow [DEPLOYMENT.md](DEPLOYMENT.md). The serv
 
 ## Known limitations and future work
 
-- The API has no authentication, authorization, rate limiting, or per-user data isolation; keep access on a trusted private network.
+- The deployed Render API has no authentication, authorization, rate limiting, or per-user data isolation. Treat it as a public demo and do not upload confidential or personal data.
 - The business-question router supports a fixed set of analyses. Unsupported questions receive guidance instead of a general answer.
 - Forecasting uses a linear trend and does not model seasonality. Anomaly detection is a screening rule, not a data-quality verdict.
 - PDF retrieval is lexical and does not OCR scanned pages. Retrieved document text and the question are sent to Groq when generating an answer.
-- The separate hosted Streamlit dashboard and representative dashboard screenshots remain to be verified.
+- Hosted LLM-backed flows remain to be checked.
 
 Potential follow-up work includes user access controls, retention and backup automation, semantic document retrieval, richer forecasting, and repeatable deployment checks.
 
 ## Development status
 
-The repository is intentionally being built one phase at a time. Current limitations: the router supports a fixed set of intents; the API deployment was checked, but the hosted dashboard has not been independently verified. The project does not save AI conversations or persist computed analysis outputs.
+The repository is intentionally being built one phase at a time. Current limitations: the router supports a fixed set of intents; the hosted dashboard responds and a sample-data screenshot is included, but all interactive dashboard and LLM/RAG flows have not been independently exercised. The project does not save AI conversations or persist computed analysis outputs.

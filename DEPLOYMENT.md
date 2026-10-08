@@ -4,9 +4,13 @@ This guide prepares InsightAI for a single Linux server using Docker Compose. Th
 
 ## Render API verification
 
-The Render API is available at [https://insightai-kzvg.onrender.com](https://insightai-kzvg.onrender.com). On 2026-10-08, `GET /health` returned `{"status":"ok"}` and `/docs` loaded. A temporary upload of `data/sample_sales.csv` returned 24 records. KPI, analytics, forecast, segmentation, and anomaly endpoints all returned successfully; the KPI result included total revenue `654300.0`, 24 sales transactions, average order value `27262.5`, 8 customers, and 138 units. The temporary dataset was deleted. This confirms the PostgreSQL driver works for the API upload, read, and analysis paths. The service does not define a `/` homepage, so the base URL returns 404; use `/health` or `/docs`. The separate Streamlit dashboard and LLM-backed flows have not been verified.
+The Render API is available at [https://insightai-kzvg.onrender.com](https://insightai-kzvg.onrender.com). On 2026-10-08, `GET /health` returned `{"status":"ok"}` and `/docs` loaded. A temporary upload of `data/sample_sales.csv` returned 24 records. KPI, analytics, forecast, segmentation, and anomaly endpoints all returned successfully; the KPI result included total revenue `654300.0`, 24 sales transactions, average order value `27262.5`, 8 customers, and 138 units. The temporary dataset was deleted. This confirms the PostgreSQL driver works for the API upload, read, and analysis paths. The service does not define a `/` homepage, so the base URL returns 404; use `/health` or `/docs`. The Streamlit dashboard is checked separately below; hosted LLM-backed flows have not been verified.
 
 The Render API is publicly reachable and has no authentication or rate limiting. Do not upload confidential or personal data. Business questions and document answers can call the configured Groq account and consume its API quota.
+
+## Render dashboard verification
+
+The Streamlit dashboard is available at [https://insightai-dashboard.onrender.com/](https://insightai-dashboard.onrender.com/). On 2026-10-08, the dashboard page returned HTTP 200 and `/_stcore/health` returned `ok`. The README includes a cropped screenshot supplied for this deployment. The dashboard is publicly reachable without sign-in; use only sample or non-sensitive data. LLM-backed and PDF question flows were not exercised as part of this check.
 
 ## Requirements
 
@@ -72,8 +76,8 @@ The API container starts with `python -m uvicorn app.main:app --host 0.0.0.0 --p
 
 ## Known limitations
 
-- The Render API health, upload, KPI, analytics, forecast, segmentation, and anomaly paths were checked; the separate hosted dashboard and LLM-backed workflows have not been checked. The steps in this guide run the application on a server you control.
-- InsightAI has no user accounts, authorization, tenant separation, or rate limiting. The deployment is suitable only for a trusted private network or a gateway that enforces access control.
+- The Render API paths and Streamlit dashboard availability were checked; hosted LLM-backed workflows have not been checked. The steps in this guide run the application on a server you control.
+- The Render API and dashboard are publicly reachable without sign-in, authorization, tenant separation, or rate limiting. Treat them as a sample-data demo; do not upload confidential or personal data. For self-hosting, restrict access to a trusted private network or a gateway that enforces access control.
 - Users with access can upload sales files and PDFs. Document Q&A sends retrieved PDF text and the question to Groq; obtain approval for that data transfer before uploading confidential material.
 - The application has no automated backup, retention, or restore system. Configure and periodically verify those operations for your server.
 - The API and dashboard currently use separate processes and do not provide per-user isolation for stored datasets or documents.
