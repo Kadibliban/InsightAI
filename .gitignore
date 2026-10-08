@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.venv*/
+venv/
+env/
+build/
+dist/
+*.egg-info/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Test and tool caches
+.pytest_cache/
+.pytest-*-tmp/
+.pytest-*-run/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local data and model artifacts
+data/uploads/
+data/rag_documents.sqlite3*
+models/
+work/
+*.db
+*.sqlite
+*.sqlite3

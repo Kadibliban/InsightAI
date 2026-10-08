@@ -1,0 +1,1 @@
+"""InsightAI application package."""
