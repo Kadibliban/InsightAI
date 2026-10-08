@@ -12,6 +12,10 @@ The Render API is publicly reachable and has no authentication or rate limiting.
 
 The Streamlit dashboard is available at [https://insightai-dashboard.onrender.com/](https://insightai-dashboard.onrender.com/). On 2026-10-08, the dashboard page returned HTTP 200 and `/_stcore/health` returned `ok`. The README includes a cropped screenshot supplied for this deployment. The dashboard is publicly reachable without sign-in; use only sample or non-sensitive data. One grounded sales question and one synthetic PDF question were exercised through the live API; the full interactive widget workflow was not automated.
 
+## Docker Compose verification
+
+On 2026-10-08, `docker compose up --build` built both application images and started the API, Streamlit dashboard, and PostgreSQL services. The API and database reported healthy, the dashboard was running, and a follow-up `docker compose ps` confirmed the same states. The published API and dashboard ports were bound to `127.0.0.1`.
+
 ## Requirements
 
 - A Linux server with Docker Engine and the Docker Compose plugin.
@@ -76,7 +80,7 @@ The API container starts with `python -m uvicorn app.main:app --host 0.0.0.0 --p
 
 ## Known limitations
 
-- The Render API health, upload, KPI, analytics, ML, business-question, and RAG smoke paths, plus Streamlit dashboard availability, were checked. Full interactive widget automation and local Docker Engine operations were not completed in this workspace. The steps in this guide run the application on a server you control.
+- The Render API health, upload, KPI, analytics, ML, business-question, and RAG smoke paths, Streamlit dashboard availability, and local Docker Compose build/startup were checked. Full interactive widget automation was not performed. The steps in this guide run the application on a server you control.
 - The Render API and dashboard are publicly reachable without sign-in, authorization, tenant separation, or rate limiting. Treat them as a sample-data demo; do not upload confidential or personal data. For self-hosting, restrict access to a trusted private network or a gateway that enforces access control.
 - Users with access can upload sales files and PDFs. Document Q&A sends retrieved PDF text and the question to Groq; obtain approval for that data transfer before uploading confidential material.
 - The application has no automated backup, retention, or restore system. Configure and periodically verify those operations for your server.
