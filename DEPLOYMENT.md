@@ -4,7 +4,7 @@ This guide prepares InsightAI for a single Linux server using Docker Compose. Th
 
 ## Render API verification
 
-The Render API is available at [https://insightai-kzvg.onrender.com](https://insightai-kzvg.onrender.com). On 2026-10-08, `GET /health` returned `{"status":"ok"}` and `/docs` loaded. A temporary upload of `data/sample_sales.csv` returned 24 records; `GET /kpis/{dataset_id}` returned total revenue `654300.0`, 24 sales transactions, average order value `27262.5`, 8 customers, and 138 units. The temporary dataset was then deleted. This confirms the PostgreSQL driver works for the API's upload and read path. The separate Streamlit dashboard has not been verified.
+The Render API is available at [https://insightai-kzvg.onrender.com](https://insightai-kzvg.onrender.com). On 2026-10-08, `GET /health` returned `{"status":"ok"}` and `/docs` loaded. A temporary upload of `data/sample_sales.csv` returned 24 records. KPI, analytics, forecast, segmentation, and anomaly endpoints all returned successfully; the KPI result included total revenue `654300.0`, 24 sales transactions, average order value `27262.5`, 8 customers, and 138 units. The temporary dataset was deleted. This confirms the PostgreSQL driver works for the API upload, read, and analysis paths. The service does not define a `/` homepage, so the base URL returns 404; use `/health` or `/docs`. The separate Streamlit dashboard and LLM-backed flows have not been verified.
 
 The Render API is publicly reachable and has no authentication or rate limiting. Do not upload confidential or personal data. Business questions and document answers can call the configured Groq account and consume its API quota.
 
@@ -72,7 +72,7 @@ The API container starts with `python -m uvicorn app.main:app --host 0.0.0.0 --p
 
 ## Known limitations
 
-- The Render API health, upload, and KPI paths were checked; the separate hosted dashboard and full end-to-end workflow have not been checked. The steps in this guide run the application on a server you control.
+- The Render API health, upload, KPI, analytics, forecast, segmentation, and anomaly paths were checked; the separate hosted dashboard and LLM-backed workflows have not been checked. The steps in this guide run the application on a server you control.
 - InsightAI has no user accounts, authorization, tenant separation, or rate limiting. The deployment is suitable only for a trusted private network or a gateway that enforces access control.
 - Users with access can upload sales files and PDFs. Document Q&A sends retrieved PDF text and the question to Groq; obtain approval for that data transfer before uploading confidential material.
 - The application has no automated backup, retention, or restore system. Configure and periodically verify those operations for your server.

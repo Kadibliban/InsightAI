@@ -75,7 +75,7 @@ No dashboard screenshot is included yet. The Render URL currently verified is th
 
 ## Current status
 
-The core application, Docker Compose setup, and Render dependency declaration are in the repository. The [live FastAPI service](https://insightai-kzvg.onrender.com/docs) passed a health check and a temporary CSV upload/KPI smoke check after the psycopg update. The separate Streamlit dashboard has not been verified. See [DEPLOYMENT.md](DEPLOYMENT.md) for verification details and access limitations.
+The core application, Docker Compose setup, and Render dependency declaration are in the repository. The [live FastAPI service](https://insightai-kzvg.onrender.com/docs) passed a health check and temporary CSV upload, KPI, analytics, forecast, segmentation, and anomaly checks after the psycopg update. The temporary dataset was deleted. The separate Streamlit dashboard and LLM-backed flows have not been verified. See [DEPLOYMENT.md](DEPLOYMENT.md) for verification details and access limitations.
 
 ## Requirements
 
