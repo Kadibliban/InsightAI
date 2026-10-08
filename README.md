@@ -71,11 +71,11 @@ The SQLAlchemy schema has two sales tables: `datasets` stores upload metadata, a
 
 ## Screenshots
 
-No verified dashboard screenshot is included yet. Add screenshots here after capturing the running dashboard with representative sample data; the hosted deployment and its appearance still need a live check.
+No dashboard screenshot is included yet. The Render URL currently verified is the FastAPI service, not the Streamlit dashboard. Add a dashboard capture when its deployed URL is available.
 
 ## Current status
 
-The core application, Docker Compose setup, and Render dependency declaration are in the repository. The latest Render deployment and its live features still need verification. See [DEPLOYMENT.md](DEPLOYMENT.md) for the deployment setup and its access limitations.
+The core application, Docker Compose setup, and Render dependency declaration are in the repository. The [live FastAPI service](https://insightai-kzvg.onrender.com/docs) passed a health check and a temporary CSV upload/KPI smoke check after the psycopg update. The separate Streamlit dashboard has not been verified. See [DEPLOYMENT.md](DEPLOYMENT.md) for verification details and access limitations.
 
 ## Requirements
 
@@ -216,10 +216,10 @@ For a private server deployment, follow [DEPLOYMENT.md](DEPLOYMENT.md). The serv
 - The business-question router supports a fixed set of analyses. Unsupported questions receive guidance instead of a general answer.
 - Forecasting uses a linear trend and does not model seasonality. Anomaly detection is a screening rule, not a data-quality verdict.
 - PDF retrieval is lexical and does not OCR scanned pages. Retrieved document text and the question are sent to Groq when generating an answer.
-- Hosted deployment smoke checks and representative dashboard screenshots remain to be completed.
+- The separate hosted Streamlit dashboard and representative dashboard screenshots remain to be verified.
 
 Potential follow-up work includes user access controls, retention and backup automation, semantic document retrieval, richer forecasting, and repeatable deployment checks.
 
 ## Development status
 
-The repository is intentionally being built one phase at a time. Current limitations: the router supports a fixed set of intents; the hosted deployment has not been independently verified after the PostgreSQL driver update. The project does not save AI conversations or persist computed analysis outputs.
+The repository is intentionally being built one phase at a time. Current limitations: the router supports a fixed set of intents; the API deployment was checked, but the hosted dashboard has not been independently verified. The project does not save AI conversations or persist computed analysis outputs.
