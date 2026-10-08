@@ -1,10 +1,81 @@
 # InsightAI — AI Business Intelligence Assistant
 
-InsightAI is a portfolio project for exploring business and sales data with analytics, machine learning, and grounded natural-language explanations. Development is proceeding in phases.
+InsightAI is a business intelligence app for exploring sales data through a dashboard, explainable machine-learning analyses, natural-language questions, and document search. Python calculates the business metrics; the language model explains those results instead of calculating or inventing them.
 
-## Current phase
+## Problem
 
-**Phase 9 — Retrieval-augmented generation (RAG).** The app accepts text-based PDFs, extracts and chunks page text, stores local text vectors persistently, retrieves relevant excerpts, and asks the configured LLM to answer with source-page citations. Sales datasets remain persisted through SQLAlchemy; PostgreSQL is supported as the target database and SQLite remains available for local development.
+Sales teams often need to combine spreadsheet cleanup, KPI reporting, trend analysis, and document lookup. InsightAI brings those tasks into one small app and keeps answers tied to calculated sales evidence or cited document excerpts.
+
+## Features
+
+- Upload and validate sales data from CSV and modern Excel files.
+- Explore KPIs, monthly revenue, product performance, and regional results in Streamlit.
+- Forecast monthly revenue, segment customers with RFM features, and flag unusual transactions.
+- Ask supported business questions and inspect the Python-calculated evidence behind each response.
+- Upload text-based PDFs and ask questions with source filename and page citations.
+- Persist sales datasets in PostgreSQL or local SQLite; persist the PDF index in SQLite.
+
+## Architecture
+
+```mermaid
+flowchart TD
+    U[Business user] --> UI[Streamlit dashboard]
+    U --> API[FastAPI endpoints]
+    UI --> PY[Python analytics and ML]
+    UI --> RAG[PDF extraction and retrieval]
+    API --> VALIDATE[Sales validation and cleaning]
+    VALIDATE --> PG[(PostgreSQL or SQLite sales data)]
+    UI --> PG
+    RAG --> DOC[(SQLite document index)]
+    PY --> EVIDENCE[Calculated evidence]
+    RAG --> EXCERPTS[Retrieved page excerpts]
+    EVIDENCE --> LLM[Groq language model explains results]
+    EXCERPTS --> LLM
+    LLM --> UI
+```
+
+The dashboard and API are separate entry points. The dashboard calls the Python analysis and document modules directly; FastAPI exposes upload, persistence, and analysis routes for API clients. In Docker Compose, both connect to the same PostgreSQL service, while the document index uses a persistent SQLite volume.
+
+## Technology stack
+
+| Area | Tools |
+| --- | --- |
+| Dashboard | Streamlit, Plotly |
+| API | FastAPI, Pydantic, Uvicorn |
+| Data processing | Pandas, NumPy |
+| Machine learning | scikit-learn |
+| Persistence | SQLAlchemy, PostgreSQL, SQLite |
+| Language model | Groq API |
+| Document retrieval | pypdf, scikit-learn hashing vectorizer |
+| Packaging and checks | Docker Compose, pytest |
+
+## How it works
+
+1. A user uploads a sales CSV or Excel file.
+2. The ingestion pipeline normalizes headers, validates required values, parses dates and numbers, and removes exact duplicate rows.
+3. The cleaned records are stored in the configured database and summarized in the dashboard.
+4. Python computes supported KPI, trend, forecasting, segmentation, and anomaly results from the selected data.
+5. For supported AI questions, the app sends calculated evidence to Groq for a plain-language explanation. For PDF questions, it retrieves relevant page excerpts and asks Groq to answer with citations.
+
+## Engineering decisions
+
+- Business numbers are calculated in Python before calling the language model; the model receives evidence to explain.
+- Supported questions map to predefined analyses. The model cannot write or execute SQL or Python.
+- Forecasting uses a small linear time-trend model so its assumptions and holdout error can be inspected.
+- Document vectors use deterministic local hashing, avoiding a model download or separate embedding service. Retrieval is lexical, so wording that differs substantially from the source may match less well.
+- PostgreSQL is used for shared sales persistence in Compose; SQLite keeps local setup simple and stores the document index.
+
+## Database design
+
+The SQLAlchemy schema has two sales tables: `datasets` stores upload metadata, and `sales_records` stores the cleaned rows linked to a dataset. Deleting a dataset also removes its sales rows. PostgreSQL is configured for the Docker Compose stack; local runs can use SQLite. PDF metadata, extracted page chunks, and hashed vectors are stored separately in the SQLite document index.
+
+## Screenshots
+
+No verified dashboard screenshot is included yet. Add screenshots here after capturing the running dashboard with representative sample data; the hosted deployment and its appearance still need a live check.
+
+## Current status
+
+The core application, Docker Compose setup, and Render dependency declaration are in the repository. The latest Render deployment and its live features still need verification. See [DEPLOYMENT.md](DEPLOYMENT.md) for the deployment setup and its access limitations.
 
 ## Requirements
 
@@ -139,6 +210,16 @@ To change the published ports, set `API_PORT` or `DASHBOARD_PORT` in `.env`. The
 
 For a private server deployment, follow [DEPLOYMENT.md](DEPLOYMENT.md). The services remain bound to loopback; provide remote access only through a private VPN or an authenticated, access-restricted gateway.
 
+## Known limitations and future work
+
+- The API has no authentication, authorization, rate limiting, or per-user data isolation; keep access on a trusted private network.
+- The business-question router supports a fixed set of analyses. Unsupported questions receive guidance instead of a general answer.
+- Forecasting uses a linear trend and does not model seasonality. Anomaly detection is a screening rule, not a data-quality verdict.
+- PDF retrieval is lexical and does not OCR scanned pages. Retrieved document text and the question are sent to Groq when generating an answer.
+- Hosted deployment smoke checks and representative dashboard screenshots remain to be completed.
+
+Potential follow-up work includes user access controls, retention and backup automation, semantic document retrieval, richer forecasting, and repeatable deployment checks.
+
 ## Development status
 
-The repository is intentionally being built one phase at a time. Current limitations: the router supports a fixed set of intents; a hosted deployment has not been created. The project does not save AI conversations or persist computed analysis outputs.
+The repository is intentionally being built one phase at a time. Current limitations: the router supports a fixed set of intents; the hosted deployment has not been independently verified after the PostgreSQL driver update. The project does not save AI conversations or persist computed analysis outputs.
